@@ -1,0 +1,59 @@
+﻿@model WatchList.Models.SeriesInfo
+@{
+
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Series</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/Styles.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center my-3 p-2">Details</h2>
+
+        <form asp-action="Edit" method="post">
+
+            <input type="hidden" name="UserID" value="@Model.UserID" />
+            <input type="hidden" name="SeriesInfoID" value="@Model.SeriesInfoID" />
+            <div asp-validation-summary="All"></div>
+
+            <div class="d-flex justify-content-center">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>SeriesID</th>
+                            <td>
+                                <span>@Model.SeriesInfoID</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Title</th>
+                            <td><input class="InputStyle" asp-for="TitleWatched" /></td>
+                        </tr>
+                        <tr>
+                            <th>Season</th>
+                            <td><input asp-for="SeasonWatched" /></td>
+                        </tr>
+                        <tr>
+                            <th>Provider</th>
+                            <td><input asp-for="ProviderWatched" /></td>
+                        </tr>
+                        <tr>
+                            <th>Genre</th>
+                            <td><input asp-for="Genre" /></td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+        <button class="btn btn-outline-info my-2" onclick="history.back()">Back</button>
+    </div>
+</body>
+</html>

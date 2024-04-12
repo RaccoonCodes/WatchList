@@ -1,0 +1,31 @@
+﻿@model FinalViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/Styles.css" />
+</head>
+
+<body>
+
+    <partial name="_NavigationPartial" model="Model" />
+
+    <h2 class="text-center my-2">Last 10 series added</h2>
+
+    <div class="container-md">
+        @await Html.PartialAsync("_WatchListTablePartial", Model?.InfoRepository?.SeriesInfos
+                 .OrderByDescending(s => s.SeriesInfoID)
+                 .Where(s => s.UserID == Model.LoginModel.UserID)
+                 .Skip((Model.PagingInfo.CurrentPage - 1) * Model.PagingInfo.ItemsPerPage)
+                 .Take(Model.PagingInfo.ItemsPerPage)
+                 ?? Enumerable.Empty<SeriesInfo>())
+    </div>
+
+</body>
+</html>

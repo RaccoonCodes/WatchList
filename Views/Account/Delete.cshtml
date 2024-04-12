@@ -1,0 +1,56 @@
+﻿@model WatchList.Models.SeriesInfo
+
+@{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/Styles.css" />
+</head>
+<body>
+    <h2 class="text-center my-2">Deleting the following</h2>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" name="SeriesInfoID" value="@Model.SeriesInfoID" />
+        <input type="hidden" name="TitleWatched" value="@Model.TitleWatched" />
+        <input type="hidden" name="SeasonWatched" value="@Model.SeasonWatched" />
+        <input type="hidden" name="ProviderWatched" value="@Model.ProviderWatched" />
+        <input type="hidden" name="Genre" value="@Model.Genre" />
+
+        <div>
+            <table class="table table-hover table-dark">
+            <tr>
+                <th>Title</th>
+                <td>@Model.TitleWatched</td>
+            </tr>
+            <tr>
+                <th>Season</th>
+                <td>@Model.SeasonWatched</td>
+            </tr>
+            <tr>
+                <th>Provider</th>
+                <td>@Model.ProviderWatched</td>
+            </tr>
+            <tr>
+                <th>Genre</th>
+                <td>@Model.Genre</td>
+            </tr>
+        </table>
+        </div>
+        
+        <h6 class="text-center">Are you sure you want to remove this from your list?</h6>
+        <div class="text-center">
+         <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </form>
+    <div class="text-center">
+        <button class="btn btn-outline-info my-2" onclick="history.back()">Back</button
+    </div>
+   
+</body>
+</html>

@@ -1,0 +1,22 @@
+﻿<nav class="navbar navbar-expand-sm bg-dark">
+    <div class="container-fluid">
+
+        <span class="navbar-text">Welcome @Model?.LoginModel.LoginName !</span>
+
+        <ul class="navbar-nav mx-auto ">
+            <li class="nav-item hovereffect">
+                <a class="nav-link text-white-50" asp-action="WatchList">Home</a>
+            </li>
+            <li class="nav-item hovereffect">
+                <a class="nav-link text-white-50" asp-action="FilterByGenre">Full List</a>
+            </li>
+            <li class="nav-item hovereffect">
+                <a class="nav-link text-white-50" asp-action="Add">Add Series</a>
+            </li>
+            <li class="nav-item hovereffect">
+                <a class="nav-link text-white-50" asp-action="AboutSite">About site</a>
+            </li>
+        </ul>
+        <a class="btn btn-danger" asp-action="Logout">Log Out</a>
+    </div>
+</nav>

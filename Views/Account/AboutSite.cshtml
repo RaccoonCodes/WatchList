@@ -1,0 +1,102 @@
+﻿@model FinalViewModel
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About Site</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/Styles.css" />
+</head>
+<body>
+    <partial name="_NavigationPartial" model="Model" />
+    <div class="text-center container mb-5">
+        <h1 class="my-1">About This site</h1>
+
+        <p class="text-yellow">Last Updated was on 4/10/2024</p>
+
+        <p>
+            Hey there @Model.LoginModel.LoginName!
+            <br />This site's purpose is this store your shows or movies in a database. Thus, a watchlist website
+            <br />Although there isn't much of front-end work, the main purpose was to show more on the back-end.
+            <br /> Full source code is on my own GitHub and other works
+            <a href="https://github.com/RaccoonCodes">Here</a>
+            <br /> Below are a few things about me
+
+        </p>
+
+    </div>
+
+    <div class="container h-100">
+        <div class="row align-middle">
+            <div class="col-md-6 col-lg-4 column">
+                <div class="card gr-1">
+                    <div class="txt">
+                        <h1>
+                            Myself
+                        </h1>
+                        <p>
+                            My Name is Ricardo Martinez. Graduated from Harper College with an
+                            Associate in Computer Science in 2019 and graduated from Elmhurst University
+                            With a bachelors in Computer Science. During my time at school, I had a part-time job
+                            at UPS for about 5 years from 2018-2023.
+                            I have started my programming career in my senior year at High school in 2017. Aside from coding,
+                            during my time at High school, I did graphic design for 4 years.
+                            <br />
+                            My Current goal is to continue to grow my web skills in both front and back
+                            ends and ultimately be a full-stack developer.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 column">
+                <div class="card gr-2">
+                    <div class="txt">
+                        <h1>
+                            Programming
+                        </h1>
+                        <p>
+                            As mentioned before, I started My programming career back in 2017. I started off learning Java
+                            then learning C++, HTML, and C#. During my time at Elmhurst Univeristy, I began learning ASP.NET then
+                            transition into a more modern development in ASP.NET Core. Eventually I learned the MVC design pattern.
+                            <br />
+                            <br />
+                            Aside from web development, I also worked on other projects such as Mobile development for a School App
+                            in Android Studio and some software development in C++, which you can find in my GitHub page on the top of this site
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 column">
+                <div class="card gr-3">
+                    <div class="txt">
+                        <h1>Hobbies</h1>
+                        <p>
+                            During my free time, I enjoy playing video games. My favorite types of games
+                            I enjoy
+                            <br />
+                            playing are JRPG, Open World Adventure, Horror, and Strategy.
+                            <br />
+                            I also play acoustic guitar. I have been playing for about 2 years now. I typically play
+                            video games songs. Which are mostly balads and Medleys. Speaking of Music, I also enjoy
+                            <br />listening to
+                            Music. I typically listen to Rock, Lofi, Pop-Rock, and Ballads.
+                            <br />
+                            <br />
+                            Some of my favorite bands are: Dark Moor, Grace, Sonata Arctica, Mago de oz, and Isra Ramos & Amadeus
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

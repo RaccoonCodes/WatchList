@@ -1,0 +1,68 @@
+﻿@model FinalViewModel
+@using Microsoft.AspNetCore.Http
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your List</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/Styles.css" />
+</head>
+<body>
+
+    <partial name="_NavigationPartial" model="Model" />
+
+    <div class="container-fluid">
+        <div class="row p-2">
+            <div class="col-3">
+                <div class="d-grid gap-1">
+                    <h3 class="text-center">Filter by</h3>
+                    <form method="get" asp-action="FilterByGenre">
+                        <button type="submit"
+                                class="btn @(Model.SelectedGenre == "All" ? "btn-success active"
+                                : "btn-primary") btn-length my-1" name="genre" value="All">
+                            All
+                        </button>
+                        @if (Model != null && Model.InfoRepository != null)
+                        {
+                            @foreach (var genre in Model.InfoRepository.SeriesInfos
+                           .Where(s => s.UserID == Model.LoginModel.UserID)
+                           .Select(s => s.Genre)
+                           .Distinct())
+                            {
+                                <button type="submit"
+                                        class="btn @(Model.SelectedGenre == genre ? "btn-success active"
+                                        : "btn-primary") btn-length my-1" name="genre" value="@genre">
+                                    @genre
+                                </button>
+                            }
+                        }
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="col">
+                <h3 class="text-center">Current List</h3>
+                @await Html.PartialAsync("_WatchListTablePartial", Model?.FilteredSeries ?? Enumerable.Empty<SeriesInfo>())
+                <div class="pagination">
+                    <ul class="pagination justify-content-center">
+                        @for (int x = 1; x <= Model?.PagingInfo.TotalPage; x++)
+                        {
+                            <li class="@(x == Model.PagingInfo.CurrentPage ? "active" : "") page-item">
+                                <a class="page-link" href="@Url.Action("FilterByGenre", new { listPage = x, genre = Model.SelectedGenre})">@x</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

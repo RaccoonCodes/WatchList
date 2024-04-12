@@ -1,0 +1,50 @@
+﻿@model WatchList.Models.SeriesInfo
+@{
+
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/Styles.css" />
+</head>
+<body>
+    <div>
+        <h2 class="text-center text-capitalize my-lg-2">Adding new Series</h2>
+
+    </div>
+
+    <form asp-action="Add" method="post">
+        <div asp-validation-summary="All" class="text-yellow"></div>
+
+        <table class="table table-dark table-hover">
+            <tr>
+                <th>Title</th>
+                <td>
+                    <input asp-for="TitleWatched" />
+                </td>
+            </tr>
+            <tr>
+                <th>Season</th>
+                <td>
+                    <input asp-for="SeasonWatched" />
+                </td>
+            </tr>
+            <tr>
+                <th>Provider</th>
+                <td><input asp-for="ProviderWatched" /></td>
+            </tr>
+            <tr>
+                <th>Genre</th>
+                <td><input asp-for="Genre" /></td>
+            </tr>
+
+        </table>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <button class="btn btn-outline-info my-2" onclick="history.back()">Back</button>
+</body>
+</html>
