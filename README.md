@@ -411,6 +411,8 @@ This view provides a user-friendly interface for users to filter and view their 
 ### AccountController
 This file has long lines of codes, please refer to AccountController.cs to view the full code. I will only display parts of codes below. 
 
+#### AccountController
+
 ```csharp
  public AccountController(UserServices userServices,IInfoRepository infoRepository)
  {
@@ -419,6 +421,9 @@ This file has long lines of codes, please refer to AccountController.cs to view 
  }
 ```
 - Dependencies Injection: The controller is injected with instances of UserServices and IInfoRepository, which are used for user authentication and accessing series information, respectively.
+
+
+#### Login
 ```csharp
 [HttpPost]
 public IActionResult Login(LoginModel loginModel)
@@ -438,3 +443,159 @@ public IActionResult Login(LoginModel loginModel)
 
 }
 ```
+- The Login action presents a login form to users and validates their credentials. If the credentials are valid, it redirects the user to their watchlist page.
+
+#### CRUD Operations
+```csharp
+ public IActionResult Edit(SeriesInfo viewModel) /**Look at file for full code **/
+ public IActionResult Add(SeriesInfo seriesInfo)  /**Look at file for full code **/
+ public IActionResult Delete(SeriesInfo seriesInfo)  /**Look at file for full code **/
+```
+- The controller provides actions for editing, adding, and deleting series from the user's watchlist. These actions handle form submissions and update the database accordingly.
+
+#### FilterByGenre
+```csharp
+public IActionResult FilterByGenre(string? genre, int listPage = 1)
+{
+    int userID = _loginModel?.UserID ?? 0;
+    
+
+    string? selectedGenre = genre;
+
+    _finalViewModel = new FinalViewModel();
+
+    if(genre == null)
+    {
+        _finalViewModel.SelectedGenre = "All";
+    }
+    else
+    {
+        _finalViewModel.SelectedGenre = genre;
+    }
+
+    if (genre == "All" || genre == null)
+    {
+        selectedGenre = null;
+    }
+
+    // Filter the series by genre if a genre is selected
+    var filteredSeries = string.IsNullOrEmpty(selectedGenre)
+        ? _infoRepository.SeriesInfos.Where(s => s.UserID == userID)
+        : _infoRepository.SeriesInfos.Where(s => s.UserID == userID && s.Genre == genre);
+
+    int totalItems = filteredSeries.Count();
+
+    // Paginate the filtered series
+    var series = filteredSeries
+        .OrderBy(s => s.TitleWatched)
+        .Skip((listPage - 1) * pageSize)
+        .Take(pageSize)
+        .ToList();
+
+    var pagingInfo = new PagingInfo
+    {
+        CurrentPage = listPage,
+        ItemsPerPage = pageSize,
+        TotalItems = totalItems
+    };
+
+    _finalViewModel = new FinalViewModel
+    {
+        LoginModel = _loginModel ?? new LoginModel(),
+        InfoRepository = _infoRepository, //need all available genre in user's repo
+        PagingInfo = pagingInfo,
+        FilteredSeries = series,
+        SelectedGenre = _finalViewModel.SelectedGenre
+    };
+    return View("FullList",_finalViewModel);
+}
+```
+- This action filters the user's series watchlist by genre. Users can select a specific genre or view all genres. The filtered results are paginated and displayed to the user.
+- Its parameters takes in nullable string named genre and int listpage which is initialized to 1 and used for current page in pagination.
+- Series Filtering: Filters the series list based on the selected genre:
+   - If selectedGenre is null or empty, retrieves all series for the current user (userID).
+   - If selectedGenre is not null, filters the series by both the user ID and the selected genre.
+   - Counts the total number of items in the filtered series list.
+- Pagination: Orders the filtered series by title and paginates the results based on the listPage parameter and a predefined pageSize. Constructs a PagingInfo object to hold pagination information, including the current page number, total items, and items per page.
+- ViewModel Population: Initializes a new instance of FinalViewModel with the login model, repository, paging info, filtered series, and selected genre.
+- Returns a view named "FullList" with the populated _finalViewModel.
+
+## Infrastructure (NOT IMPLEMENTED)
+### SessionExtensions
+This provides method for working with session data. This allow you to store and retrieve objects from session storage using JSON serialization and deserialization.
+
+```csharp
+public static class SessionExtensions
+{ 
+    // serializes the object to JSON and stores it in session
+    public static void SetJson(this ISession session, string key, object value)
+    {
+        session.SetString(key, JsonSerializer.Serialize(value));
+    }
+    // retrieves JSON string from session based on key. if its not 
+    // null, deserialize it. else return default value for type T. 
+    public static T? GetJson<T>(this ISession session, string key)
+    {
+        var sessionData = session.GetString(key);
+        return sessionData == null
+        ? default(T) : JsonSerializer.Deserialize<T>(sessionData);
+    }
+
+}
+```
+
+
+The SetJson method serializes an object to JSON and stores it in the session. In its parameters,
+```csharp
+public static void SetJson(this ISession session, string key, object value)
+```
+  - session: An instance of ISession representing the session.
+  - key: A string representing the key under which the object will be stored in the session.
+  - value: The object to be serialized and stored in the session.
+
+The GetJson method retrieves a JSON string from the session based on a specified key. If the retrieved JSON string is not null, it deserializes it into the specified type T. If the JSON string is null, it returns the default value for type T.
+
+```csharp
+ public static T? GetJson<T>(this ISession session, string key)
+```
+Data Type T object to deserialize from the JSON string
+
+In its parameters, 
+session: An instance of ISession representing the session.
+key: A string representing the key used to retrieve the object from the session.
+
+Here is an example if it was implemented into this project:
+
+```csharp
+// Storing user
+var user = new User { Name = "My Name", Age = 30 };
+HttpContext.Session.SetJson("CurrentUser", user);
+
+// Retrieving the object from session
+var currentUser = HttpContext.Session.GetJson<User>("CurrentUser");
+```
+In this example, the User object is serialized to JSON using the SetJson method and stored in the session with the key "CurrentUser". Later, the GetJson method is used to retrieve the object from the session and deserialize it back into a User object.
+
+## Summary 
+WatchList is a project designed for users to manage and track their favorite series and movies. It offers features such as user authentication, series management, genre filtering, and responsive design for compatibility across various devices.
+
+### Key Features: 
+- User Authentication
+- Series Management
+- Genre Filtering
+- Responsive Design
+- Navigation Bar
+
+### Developed in 
+- Back-end: ASP.NET Core MVC for server-side logic.
+- Front-end: Utilizes HTML, CSS, Bootstrap 5, and JavaScript for the user interface.
+- Database Management: Implements Entity Framework Core for database management.
+- Database Storage: Stores data in Microsoft SQL Server for efficient data retrieval and management.
+
+### Behind the Code:
+- Models: Defines data structures for series information and user details, including validation and database schema.
+- Views: Renders user interface components, including partial views for navigation and series listing.
+- Controllers: Implements actions for user authentication, series management, and genre filtering.
+- Infrastructure: Provides utilities for session data management using JSON serialization and deserialization.
+
+This Project last Update was on: 4/10/2024 and Developed by myself.
