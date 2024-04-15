@@ -13,6 +13,34 @@ The two Usernames & Passwords:
 
    Pass: 456
 
+## Table of Content 
+
+1. [Features](#features)
+2. [How it was developed](#how-it-was-developed)
+    - [ASP.NET Core MVC for back-end](#aspnet-core-mvc-for-back-end)
+    - [HTML, CSS, Bootstrap 5, and JavaScript for front-end](#html-css-bootstrap-5-and-javascript-for-front-end)
+    - [Entity Framework Core for database management](#entity-framework-core-for-database-management)
+    - [Microsoft SQL Server for database storage](#microsoft-sql-server-for-database-storage)
+3. [Use](#use)
+    - [Login with the provided usernames and passwords](#login-with-the-provided-usernames-and-passwords)
+    - [Home page after login](#home-page-after-login)
+    - [Manage and add series](#manage-and-add-series)
+    - [Log out](#log-out)
+4. [Installation](#installation)
+    - [Clone the repository](#clone-the-repository)
+    - [Open the solution in Visual Studio](#open-the-solution-in-visual-studio)
+    - [Restore NuGet packages and build the solution](#restore-nuget-packages-and-build-the-solution)
+    - [Configure the appsettings.json file](#configure-the-appsettingsjson-file)
+    - [Run database migration](#run-database-migration)
+    - [Build and Run Application](#build-and-run-application)
+5. [Behind the Code Overview](#behind-the-code-overview)
+    - [Models](#models)
+    - [Controllers](#controllers)
+    - [Views](#views)
+    - [Infrastructure (NOT IMPLEMENTED)](#infrastructure-not-implemented)
+6. [Summary](#summary)
+
+
 ## Features
 - User Authentication: Checks for valid usernames and passwords.
 - Management: Users can add, remove, and update shows in their watchlist.
