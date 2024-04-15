@@ -241,3 +241,200 @@ This class is responsible for providing access to series information stored in a
 - GetSeriesInfoByAttributes: Retrieves series information by its attributes such as title, season, provider, genre, and user ID.
 - Entity Framework Integration: The class leverages Entity Framework Core's features such as LINQ queries and change tracking to interact with the database.
 
+### PagingInfo
+This Focuses on pagination information used to manage and display paginated data in the application's user interface.
+```csharp
+ public class PagingInfo
+ {
+     public int TotalItems { get; set; }
+     public int ItemsPerPage { get; set; }
+     public int CurrentPage {  get; set; }
+     public int TotalPage => (int)Math.Ceiling((decimal)TotalItems / ItemsPerPage); 
+ }
+```
+
+- TotalPage: Determines the total number of pages needed to display all items based on the total items and items per page.
+  
+The TotalPage property calculates the total number of pages required to display all available items. It uses the formula (TotalItems / ItemsPerPage), rounding up to the nearest whole number using Math.Ceiling.
+
+## Views
+I will only mention the Partial views and one of the view called "FullList.cshtml"
+### Partial Views 
+
+##### _NavigationPartial
+This a partial view for a Navigationbar to be reused in other Views without needing to code it again. Easy maintainability and following DRY priniciple. 
+
+```csharp
+<nav class="navbar navbar-expand-sm bg-dark">
+    <div class="container-fluid">
+
+        <span class="navbar-text">Welcome @Model?.LoginModel.LoginName !</span>
+
+        <ul class="navbar-nav mx-auto ">
+            <li class="nav-item hovereffect">
+                <a class="nav-link text-white-50" asp-action="WatchList">Home</a>
+            </li>
+            <li class="nav-item hovereffect">
+                <a class="nav-link text-white-50" asp-action="FilterByGenre">Full List</a>
+            </li>
+            <li class="nav-item hovereffect">
+                <a class="nav-link text-white-50" asp-action="Add">Add Series</a>
+            </li>
+            <li class="nav-item hovereffect">
+                <a class="nav-link text-white-50" asp-action="AboutSite">About site</a>
+            </li>
+        </ul>
+        <a class="btn btn-danger" asp-action="Logout">Log Out</a>
+    </div>
+</nav>
+```
+
+This navigation bar contains Home, Full List, Add Series, About Site, and Logout. With each of the item linked respectively to another view via asp-action tags.
+
+#### _WatchListTable
+This partial view provides a user-friendly interface for viewing and interacting with a list of series information, allowing users to edit or delete series entries as needed
+
+```csharp
+@model IEnumerable<WatchList.Models.SeriesInfo>
+
+<table class="table table-dark table-hover my-2">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Season</th>
+            <th>Provider</th>
+            <th>Genre</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var info in Model)
+        {
+            <tr>
+                <td>@info.TitleWatched</td>
+                <td>@info.SeasonWatched</td>
+                <td>@info.ProviderWatched</td>
+                <td>@info.Genre</td>
+                <td>
+                    <a class="btn btn-outline-info my-2" asp-action="Edit" asp-route-infoID="@info.SeriesInfoID">Edit</a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-infoID="@info.SeriesInfoID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+```
+- Model Declaration: Strongly typed to accept an enumerable collection of SeriesInfo objects.
+- Attribute: The "asp-action" attribute specifies the controller action to be invoked when an action button is clicked, and the "asp-route-infoID" attribute passes the SeriesInfoID to the controller action for identification when choosing Edit or Delete. 
+
+#### FullList
+This view provides a user-friendly interface for users to filter and view their list of series, with support for pagination to navigate through large lists.
+
+```csharp
+@model FinalViewModel
+@using Microsoft.AspNetCore.Http
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your List</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/Styles.css" />
+</head>
+<body>
+
+    <partial name="_NavigationPartial" model="Model" />
+
+    <div class="container-fluid">
+        <div class="row p-2">
+            <div class="col-3">
+                <div class="d-grid gap-1">
+                    <h3 class="text-center">Filter by</h3>
+                    <form method="get" asp-action="FilterByGenre">
+                        <button type="submit"
+                                class="btn @(Model.SelectedGenre == "All" ? "btn-success active"
+                                : "btn-primary") btn-length my-1" name="genre" value="All">
+                            All
+                        </button>
+                        @if (Model != null && Model.InfoRepository != null)
+                        {
+                            @foreach (var genre in Model.InfoRepository.SeriesInfos
+                           .Where(s => s.UserID == Model.LoginModel.UserID)
+                           .Select(s => s.Genre)
+                           .Distinct())
+                            {
+                                <button type="submit"
+                                        class="btn @(Model.SelectedGenre == genre ? "btn-success active"
+                                        : "btn-primary") btn-length my-1" name="genre" value="@genre">
+                                    @genre
+                                </button>
+                            }
+                        }
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="col">
+                <h3 class="text-center">Current List</h3>
+                @await Html.PartialAsync("_WatchListTablePartial", Model?.FilteredSeries ?? Enumerable.Empty<SeriesInfo>())
+                <div class="pagination">
+                    <ul class="pagination justify-content-center">
+                        @for (int x = 1; x <= Model?.PagingInfo.TotalPage; x++)
+                        {
+                            <li class="@(x == Model.PagingInfo.CurrentPage ? "active" : "") page-item">
+                                <a class="page-link" href="@Url.Action("FilterByGenre", new { listPage = x, genre = Model.SelectedGenre})">@x</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
+```
+- Model Declaration: The view is strongly typed to accept a FinalViewModel object.
+- Navigation Partial: The _NavigationPartial partial view is rendered, passing the Model object.
+- Filter Section: A section on the left side allows users to filter the list by genre. It includes buttons for each genre, with an option to filter by "All." Genre buttons are generated based on available genres in the user's list.
+- Pagination: Below the list, pagination links are displayed to navigate through multiple pages of the list. Pagination links are generated dynamically based on the total number of pages (TotalPage) in the PagingInfo object.
+
+## Controllers
+
+### AccountController
+This file has long lines of codes, please refer to AccountController.cs to view the full code. I will only display parts of codes below. 
+
+```csharp
+ public AccountController(UserServices userServices,IInfoRepository infoRepository)
+ {
+     _userServices = userServices;
+     _infoRepository = infoRepository;
+ }
+```
+- Dependencies Injection: The controller is injected with instances of UserServices and IInfoRepository, which are used for user authentication and accessing series information, respectively.
+```csharp
+[HttpPost]
+public IActionResult Login(LoginModel loginModel)
+{
+    if (!ModelState.IsValid)
+        return View(loginModel);
+
+    if (!ValidateCredentials(ref loginModel))
+    {
+        ModelState.AddModelError("","Invalid Username or Password");
+        return View(loginModel);
+    }
+   
+    _loginModel = loginModel;
+
+ return RedirectToAction("WatchList");
+
+}
+```
