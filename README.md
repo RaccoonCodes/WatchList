@@ -70,7 +70,7 @@ The two Usernames & Passwords:
 
 # Behind the Code Overview
 
-The follwoing will explain some parts of the code in detail.
+The follwoing will explain some parts of the code in detail in Models, Views, Controllers, and Infrastructure. 
 
 ## Models
 SeriesInfo.cs and UsersDBModels.cs are both Tables that are part of one database schema for Entity Framework. Both are then set and created through InfoDBContext.cs Each of the tables have validations and validation format through regular expression respectively on each property and methods.
