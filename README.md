@@ -65,8 +65,10 @@ The two Usernames & Passwords:
 2) Open the solution in Visual Studio.
 3) Restore NuGet packages and build the solution.
 4) In your appsettings.json, you may update to your connection strings you wish or you may leave it alone. Just as long you have Microsoft SQL Server in your machine.
-5) you might need to run the database migration to create the needed tables. If so, run the command, "dotnet ef database update".
-6) Build and Run Application
+5) you might need to run the database migration to create the needed tables. If so, run the command:
+   1) "dotnet ef migrations add Initial"
+   2) "dotnet ef database update"
+7) Build and Run Application
 
 # Behind the Code Overview
 
